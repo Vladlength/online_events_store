@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Home</title>
+{% endblock %}
+{% block page_content %}
+{% load custom_filters %}
+
+
+<div id="myCarousel" class="carousel slide" data-bs-ride="carousel" xmlns="http://www.w3.org/1999/html">
+
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+                aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <svg class="bd-placeholder-img" width="100%" height="400px" xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <image href="{{ top.0.image.url }}" width="100%" height="100%"
+                       style="object-fit: cover; width: 100%; height: 300%; " preserveAspectRatio="none"/>
+
+            </svg>
+            <div class="container">
+                <div class="carousel-caption text-start">
+                    <h2><i>{{ top.0.name }}</i></h2>
+                    <p>{{ top.0.body | slice:":300"}}...</p>
+                    <p><a class="btn btn-lg btn-primary" href="{% url 'event_detail' top.0.pk %}">Подробнее</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="400px" xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <image href="{{ top.1.image.url }}" width="100%" height="100%"
+                       style="object-fit: cover; width: 100%; height: 300%;" preserveAspectRatio="none"/>
+            </svg>
+            <div class="container">
+                <div class="carousel-caption">
+                    <h2><i>{{ top.1.name }}</i></h2>
+                    <p>{{ top.1.body | slice:":300"}}...</p>
+                    <p><a class="btn btn-lg btn-primary" href="{% url 'event_detail' top.1.pk %}">Подробнее</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="400px" xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <image href="{{ top.2.image.url }}" width="100%" height="100%"
+                       style="object-fit: fill fill; width: 100%; height: 300%; " preserveAspectRatio="none"/>
+            </svg>
+            <div class="container">
+                <div class="carousel-caption text-end">
+                    <p>{{ top.2.body | slice:":300"}}...</p>
+                    <h2><i>{{ top.2.name }}</i></h2>
+
+                    <p><a class="btn btn-lg btn-primary" href="{% url 'event_detail' top.2.pk %}">Подробнее</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+<h2>Мероприятия</h2>
+<div class="container">
+    <div class="row">
+        {% for event in events %}
+
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="height: 70px;
+        overflow: hidden;">{{ event.name }}</h5>
+                    <img class="card-img-top" src="{{ event.image.url }}"
+                         alt="{{ event.name }}" width="100%" height="225"
+                         style="object-fit: cover;">
+
+                    <hr>
+                    <small>{{ event.date }} |&nbsp;
+                        {{ event.time}}&nbsp;-&nbsp;{{ event.end_time }}
+                    </small>
+                    {% if event.prices.all %}
+                    {% if event.prices|one_price %}
+                    <p><b>{{ event.prices.all | smallest_price }} byn</b>
+                    </p>
+                    {% else %}
+                    <p><b>{{ event.prices.all | smallest_price }} - {{ event.prices | largest_price }} byn</b>
+                    </p>
+                    {% endif %}
+                    {% else %}
+                    <p><b>Бесплатно</b>
+                    </p>
+                    {% endif %}
+
+                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">
+                        <a class="navbar-brand" href="{% url 'event_detail' event.pk %}"><b>Подробнее</b></a>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:4 %}
+    </div>
+    <div class="row">
+
+        {% endif %}
+
+
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Detail</title>
+{% endblock %}
+{% block page_content %}
+{% load static %}
+{% load custom_filters %}
+
+<hr>
+<div class="container" style=" background-color: White">
+    <div class="row">
+        <h4 style="text-align: center"><b><i>{{ event.name }}<i></b></h4>
+
+
+        <img src="{{ event.image.url }}" height="500px" width="500px" style="float: left; margin-right: 10px;">
+        <div style="float: right; ">
+            <h3>{{ event.date }}</h3>
+
+            <h3>{{ event.time }}&nbsp;-&nbsp;{{ event.end_time }}</h3>
+            <br>
+            <h3 style="color:  #FF5733 ">
+                <img src="{% static 'img/map.jpg' %}" height="8%" width="8%">&nbsp;{{ event.place }}</h3>
+            <h3><b>Цена билетов:
+                <!--            -->
+                {% if event.prices.all %}
+                {% if event.prices|one_price %}
+                <p><b>{{ event.prices.all | smallest_price }} byn</b>
+                </p>
+                {% else %}
+                <p><b>{{ event.prices.all | smallest_price }} - {{ event.prices | largest_price }} byn</b>
+                </p>
+                {% endif %}
+            <button type="button" style="background-color: #FF5733; border-color: #FF5733;  border-radius: 10px;   width: 200px;
+  height: 50px; font-size: 20px">
+                <a class="navbar-brand" href="{% url 'prices' event.id %}"><b>Купить билеты</b></a>
+            </button>
+                {% else %}
+                <p><b>Бесплатно</b>
+                </p>
+                {% endif %}
+            </b></h3>
+            <!---->
+
+        </div>
+        <!--        -->
+
+        <!--              -->
+        <div class="container" style="background-color: White">
+        <div style=" clear: both;">
+            <h3>{{ event.body }}</h3>
+        </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

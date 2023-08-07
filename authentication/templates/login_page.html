@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Login</title>
+{% endblock %}
+{% block page_content %}
+<h2>Авторизация</h2>
+<div style="padding: 4px 20px">
+<br>
+<div class="col-4">
+
+    <form id="add_form" method="post">
+        {% csrf_token %}
+        <h5 style="color: white">{{form}}</h5>
+
+        <button form="add_form" style="color:#2E86C1 " type="submit"
+                class="btn.btn-primaryw-100 btn btn-lg btn-outline-primary custom-button">
+            <b>Зайти</b>
+        </button>
+
+    </form>
+</div>
+</div>
+
+{% endblock%}

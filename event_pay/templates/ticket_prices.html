@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Prices</title>
+{% endblock %}
+{% load static %}
+{% load price_filters %}
+{% block page_content %}
+
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    {% for price in prices %}
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">{{ price.price }}</h4>
+                <h3 style="font-family: 'SEGOE SCRIPT'" class="my-0 fw-normal"><b>byn</b></h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li><b>Включает:</b>&nbsp;{{ price.why_cost_text }}</li>
+                    {% if price.tickets_quantity|quantity_is_zero %}
+                        <li><b>Количество билетов:</b>&nbsp;SOLD OUT </li>
+                    {% else %}
+                        <li><b>Количество билетов:</b>&nbsp;{{ price.tickets_quantity }}</li>
+                    {% endif %}
+
+                </ul>
+
+                <br>
+                <!--                -->
+                 {% if price.tickets_quantity|quantity_is_zero %}
+                {% else %}
+                <form action="{% url 'cart:cart_add' product_id=event.pk price_id=price.pk  %}" method="post">
+<!--                    -->
+                    <h3>{{ cart_product_form }}</h3>
+
+                    <!--            -->
+                    {% csrf_token %}
+                    <button type="submit" class="w-100 btn btn-lg btn-outline-primary">Добавить в корзину</button>
+                </form>
+                {% endif %}
+                <!--                -->
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+
+    {% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Search</title>
+{% endblock %}
+{% block page_content %}
+{% load custom_filters %}
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        {% for event in result %}
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <img class="card-img-top" src="{{ event.image.url }}"
+                         alt="{{ event.name }}" width="100%" height="225"
+                         style="object-fit: cover;">
+                    <hr>
+                    <small>{{ event.date }} |&nbsp;
+                        {{ event.time}}&nbsp;-&nbsp;{{ event.end_time }}
+                    </small>
+                    {% if event.prices.all %}
+                    {% if event.prices|one_price %}
+                    <p><b>{{ event.prices.all | smallest_price }} byn</b>
+                    </p>
+                    {% else %}
+                    <p><b>{{ event.prices.all | smallest_price }} - {{ event.prices | largest_price }} byn</b>
+                    </p>
+                    {% endif %}
+                    {% else %}
+                    <p><b>Бесплатно</b>
+                    </p>
+                    {% endif %}
+
+
+                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">
+                        <a class="navbar-brand" href="{% url 'event_detail' event.pk %}"><b>Подробнее</b></a>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:4 %}
+    </div>
+    <div class="row">
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% if not result %}
+<br>
+<h2>Результатов не найдено</h2>
+
+{% endif %}
+{% endblock %}

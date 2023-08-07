@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Price_creation</title>
+{% endblock %}
+{% block page_content %}
+{% load static %}
+<form method="post" style="width: 1100px; padding: 4px 20px" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h5 style="color: white; padding: 4px 20px;">Цена</h5>
+    <div class="form-group">
+        {{ form.price }}
+    </div>
+    <h5 style="color: white; padding: 4px 20px;">Обоснование цены</h5>
+    <div class="form-group">
+        {{ form.why_cost_text }}
+    </div>
+    <h5 style="color: white; padding: 4px 20px;">Количество билетов</h5>
+    <div class="form-group">
+        {{ form.tickets_quantity }}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Создать цену</button>
+</form>
+<div style="padding: 4px 20px;">
+<button  class="btn btn-primary" type="button">
+    <a class="navbar-brand" href="{% url 'main_creation' %}"><b>Вернуться к созданию мероприятия</b></a>
+</button>
+    </div>
+<h3 style="color: white; padding: 4px 20px">Цены:</h3>
+{% for price in prices %}
+
+<h3 style="color: white; padding: 4px 20px">{{ price.price }}|&nbsp;{{ price.why_cost_text | slice:":100" }}</h3>
+
+{% endfor %}
+{% endblock %}
+<br>

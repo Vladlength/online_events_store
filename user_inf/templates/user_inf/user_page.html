@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}
+<title>User_page</title>
+{% endblock %}
+{% block page_content %}
+{% load custom_filters %}
+{% load price_filters %}
+{% load static %}
+<style>
+    th, td {
+  font-size: 23px;
+  padding: 12px 20px;
+  color: white;
+}
+
+
+</style>
+<h1 style='position: absolute; top:20%;
+  left: 50%;
+  transform: translate(-50%, -50%); font-family: "DAYTON"; color: white;  font-size: 80px;'>{{ request.user.username }} </h1>
+<br>
+<br>
+<br>
+<br>
+
+<h3 style="color: white">Username: {{ request.user.username }}</h3>
+<h3 style="color: white">Забрать и оплатить наличными билеты можно в точках продаж</h3>
+
+{% if not booked_events|zero_price %}
+<h1> Забронировано: </h1>
+<table class="cart">
+    <thead>
+    <tr>
+        <th>Картинка</th>
+        <th>Товар</th>
+        <th>Количество</th>
+        <!--            <th>Цена за шт</th>-->
+        <th>Общая стоимость</th>
+        <th></th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for event in booked_events %}
+
+
+    <tr style=" background-color: #BB6FE3 ">
+        <td>
+            <a href="{{ event.get_absolute_url }}">
+                <img src="{{ event.image.url }}"
+                     width="30%" height="30%">
+            </a>
+        </td>
+        <td>{{ event.event_name }}</td>
+
+
+        <td>
+            {{ event.quantity }}
+        </td>
+        <td class="num">{{ event.price }}byn</td>
+
+    </tr>
+
+
+    <td>
+        <button onclick="openStripeCheckout('{{ event.event_id }}', '{{ event.quantity }}', '{{ event.price|int_ }}', '{{ event.price_id }}', '{{ event.price|mul_100 }}')">
+            Оплатить картой
+        </button>
+    </td>
+
+
+
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+
+    <script>
+function openStripeCheckout(event_id, quantity, price, price_id, price100) {
+  var handler = StripeCheckout.configure({
+    key: '{{ key }}',
+    locale: 'auto',
+    token: function(token) {
+      console.log(token); // просто для примера
+
+
+        var url = 'http://127.0.0.1:8000/cart/charge/' + event_id + '/' + quantity + '/' + price + '/' + price_id + '/0/';
+                window.location.href = url;
+    }
+  });
+
+  handler.open({
+    name: 'Оплата картой',
+    amount: price100, // Ваша сумма платежа в копейках
+    currency: 'byn',
+    // Измените или добавьте другие необходимые данные
+  });
+}
+
+
+
+    </script>
+
+
+    {% endfor %}
+    {% else %}
+
+    {% endif %}
+
+
+    </tbody>
+</table>
+
+
+{% if not events|zero_price %}
+<h1> Оплачено: </h1>
+<table class="cart">
+    <thead>
+    <tr>
+        <th>Картинка</th>
+        <th>Товар</th>
+        <th>Количество</th>
+        <!--            <th>Цена за шт</th>-->
+        <th>Общая стоимость</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for event in events %}
+
+
+    <tr style=" background-color: #BB6FE3 ">
+        <td>
+            <a href="{{ event.get_absolute_url }}">
+                <img src="{{ event.image.url }}"
+                     width="30%" height="30%">
+            </a>
+        </td>
+        <td>{{ event.event_name }}</td>
+
+
+        <td>
+            {{ event.quantity }}
+        </td>
+        <td class="num">{{ event.price }}byn</td>
+
+    </tr>
+
+    {% endfor %}
+    {% else %}
+    <h2>Вы пока ничего не приобрели</h2>
+    {% endif %}
+
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Main_creation</title>
+{% endblock %}
+{% block page_content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/price.css' %}">
+<link rel="stylesheet" href="{% static 'css/price.js' %}">
+<h2>Создание мероприятия:</h2>
+
+<form method="post" style="width: 1100px; padding: 4px 20px" enctype="multipart/form-data">
+
+
+    {% csrf_token %}
+    <h5 style="color: white; padding: 4px 20px;">Название мероприятия</h5>
+    <div class="form-group">
+        {{ form.name }}
+    </div>
+    <h5 style="color: white; padding: 4px 20px;">Описание мероприятия</h5>
+    <div class="form-group">
+        {{ form.body }}
+
+        <h5 style="color: white; padding: 4px 20px;">Поместите постер</h5>
+        <div class="form-group">
+            {{ form.image }}
+        </div>
+        <div style="border: 1px solid white; border-width: 5px; width: 500px ">
+            <button type="button" style="background-color: #FF5733; border-color: #FF5733;">
+                <a class="navbar-brand" href="{% url 'price_creation' %}"><b>Добавить цену</b></a>
+            </button>
+        </div>
+
+
+        <h2>Цены:</h2>
+
+        {% if not prices %}
+        <h5 style="color: White">(Цен пока нет)</h5>
+        {% endif %}
+        {% for price in prices %}
+        <h3 style="color: white">
+            {{ price.price }}|&nbsp;
+            {{ price.why_cost_text | slice:":30" }}
+        </h3>
+        {% endfor %}
+    </div>
+    <h5 style="color: white; padding: 4px 20px;">Выберите нужные цены </h5>
+    <div class=" form-group">
+        {{ form.prices }}
+    </div>
+
+    <h5 style="color: white; padding: 4px 20px;">Дата проведения мероприятия</h5>
+    <div class=" form-group">
+        {{ form.date }}
+    </div>
+    <h5 style="color: white; padding: 4px 20px;">Время начала мероприятия</h5>
+    <div class="form-group">
+        {{ form.time }}
+    </div>
+    <h5 style="color: white; padding: 4px 20px;">Время конца мероприятия</h5>
+    <div class="form-group">
+        {{ form.end_time }}
+    </div>
+    <h5 style="color: white; padding: 4px 20px;">Место проведения мероприятия</h5>
+    <div class="form-group">
+        {{ form.place }}
+    </div>
+    <h5 style="color: white; padding: 4px 20px;">Количество билетов</h5>
+    <div class="form-group">
+        {{ form.tickets_quantity }}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">
+        Создать мероприятие
+    </button>
+
+
+
+
+</form>
+
+{% endblock %}
+
+
